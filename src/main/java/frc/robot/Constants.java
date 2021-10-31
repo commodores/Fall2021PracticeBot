@@ -20,11 +20,33 @@ public final class Constants {
         public static final double kMaxSpeed = 3.0; // 3 meters per second
         public static final double kMaxAngularSpeed = Math.PI; // 1/2 rotation per second
 
+        public static final double kRobotLength = 0.6096;
+        public static final double kRobotWidth = 0.6096;
+        public static final double kWheelDiameter = 0.0762;
+
+        public static final int kDriveEncoderResolution = 2048;
+
         public static final Rotation2d kFrontLeftOffset = Rotation2d.fromDegrees(0);
         public static final Rotation2d kFrontRightOffset = Rotation2d.fromDegrees(0);
         public static final Rotation2d kBackLeftOffset = Rotation2d.fromDegrees(0);
         public static final Rotation2d kBackRightOffset = Rotation2d.fromDegrees(0);
 
+        //CAN IDS for Motors and Encoders
+        public static final int kFrontLeftDriveChannel = 10;
+        public static final int kFrontLeftTurnChannel = 11;
+        public static final int kFrontLeftEncoderChannel = 12;
+
+        public static final int kFrontRightDriveChannel = 13;
+        public static final int kFrontRightTurnChannel = 14;
+        public static final int kFrontRightEncoderChannel = 15;
+
+        public static final int kBackLeftDriveChannel = 16;
+        public static final int kBackLeftTurnChannel = 17;
+        public static final int kBackLeftEncoderChannel = 18;
+
+        public static final int kBackRightDriveChannel = 19;
+        public static final int kBackRightTurnChannel = 20;
+        public static final int kBackRightEncoderChannel = 21;
     }
 
 

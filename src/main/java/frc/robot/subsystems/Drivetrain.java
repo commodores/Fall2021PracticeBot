@@ -37,15 +37,15 @@ public class Drivetrain extends SubsystemBase {
   /** Creates a new Drivetrain. */
   public Drivetrain() {
     
-    m_frontLeftLocation = new Translation2d(0.381, 0.381);
-    m_frontRightLocation = new Translation2d(0.381, -0.381);
-    m_backLeftLocation = new Translation2d(-0.381, 0.381);
-    m_backRightLocation = new Translation2d(-0.381, -0.381);
+    m_frontLeftLocation = new Translation2d(DriveConstants.kRobotLength / 2, DriveConstants.kRobotWidth /2);
+    m_frontRightLocation = new Translation2d(DriveConstants.kRobotLength / 2, -DriveConstants.kRobotWidth /2);
+    m_backLeftLocation = new Translation2d(-DriveConstants.kRobotLength / 2, DriveConstants.kRobotWidth /2);
+    m_backRightLocation = new Translation2d(-DriveConstants.kRobotLength / 2, -DriveConstants.kRobotWidth /2);
 
-    m_frontLeft = new SwerveModule(1, 2, 9,  DriveConstants.kFrontLeftOffset);
-    m_frontRight = new SwerveModule(3, 4, 10, DriveConstants.kFrontRightOffset);
-    m_backLeft = new SwerveModule(5, 6, 11, DriveConstants.kBackLeftOffset);
-    m_backRight = new SwerveModule(7, 8, 12, DriveConstants.kBackRightOffset);
+    m_frontLeft = new SwerveModule(DriveConstants.kFrontLeftDriveChannel, DriveConstants.kFrontLeftTurnChannel, DriveConstants.kFrontLeftEncoderChannel,  DriveConstants.kFrontLeftOffset);
+    m_frontRight = new SwerveModule(DriveConstants.kFrontRightDriveChannel, DriveConstants.kFrontRightTurnChannel, DriveConstants.kFrontRightEncoderChannel, DriveConstants.kFrontRightOffset);
+    m_backLeft = new SwerveModule(DriveConstants.kBackLeftDriveChannel, DriveConstants.kBackLeftTurnChannel, DriveConstants.kBackLeftEncoderChannel, DriveConstants.kBackLeftOffset);
+    m_backRight = new SwerveModule(DriveConstants.kBackRightDriveChannel, DriveConstants.kBackRightTurnChannel, DriveConstants.kBackRightEncoderChannel, DriveConstants.kBackRightOffset);
 
     m_gyro = new AHRS(SPI.Port.kMXP);
 

@@ -22,13 +22,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
 public class SwerveModule extends SubsystemBase {
-  private static final double kWheelDiameter = 0.0762;
-  //private static final int kTurnEncoderResolution = 4096;
-  private static final int kDriveEncoderResolution = 2048;
-
+  
   private static final double kModuleMaxAngularVelocity = DriveConstants.kMaxAngularSpeed;
-  private static final double kModuleMaxAngularAcceleration =
-      2 * Math.PI; // radians per second squared
+  private static final double kModuleMaxAngularAcceleration = 2 * Math.PI; // radians per second squared
 
   private final WPI_TalonFX m_driveMotor;
   private final CANSparkMax m_turningMotor;
@@ -88,8 +84,8 @@ public class SwerveModule extends SubsystemBase {
   }
 
   private double getDriveMotorEncoder() {
-    return m_driveMotor.getSelectedSensorVelocity() * 10 / kDriveEncoderResolution * Math.PI
-        * kWheelDiameter / 5.25;
+    return m_driveMotor.getSelectedSensorVelocity() * 10 / DriveConstants.kDriveEncoderResolution * Math.PI
+        * DriveConstants.kWheelDiameter / 5.25;
   }
 
   private double getTurningMotorEncoder() {

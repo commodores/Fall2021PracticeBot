@@ -58,9 +58,9 @@ public class RobotContainer {
   {
     /* Add options (which autonomous commands can be selected) to chooser. */
     m_autoChooser.setDefaultOption("Do Nothing", "doNothing");
-    m_autoChooser.addOption("3 Ball Auto", "threeball");
-    m_autoChooser.addOption("6 Ball Auto", "sixball");
-    m_autoChooser.addOption("5 Ball Auto", "SecondAuto");
+    m_autoChooser.addOption("Other Awesome Auto", "auto1");
+    m_autoChooser.addOption("Other Awesome Auto", "auto2");
+    m_autoChooser.addOption("Other Awesome Auto", "auto3");
 
     /* Display chooser on SmartDashboard for operators to select which autonomous command to run during the auto period. */
     SmartDashboard.putData("Autonomous Command", m_autoChooser);
@@ -75,14 +75,15 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     switch (m_autoChooser.getSelected())
     {
-      case "threeball":
+      case "auto1":
+        //Here are some examples:
         //return new SimpleShoot();
         //RobotContainer.m_drivetrain.setPos(Units.feetToMeters(3.5), Units.feetToMeters(-5));
         //return new RunTrajectory(getSlalom());
-      case "sixball" :
+      case "auto2" :
         //return new SixBallAuto();
       
-      case "SecondAuto" :
+      case "auto3" :
         //return new DefenseTrench();
     
       default:
