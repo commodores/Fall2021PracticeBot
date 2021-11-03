@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 //import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -38,12 +38,14 @@ public class SwerveModule extends SubsystemBase {
 
   private final ProfiledPIDController m_turningPIDController;
 
+  private SwerveModuleState state = new SwerveModuleState();
+
   // Gains are for example purposes only - must be determined for your own robot!
   private final SimpleMotorFeedforward m_driveFeedforward;
   private final SimpleMotorFeedforward m_turnFeedforward;
 
   /** Creates a new SwerveModule. */
-  public SwerveModule(int driveMotorChannel, int turningMotorChannel, int turningEncoder, Rotation2d offset, boolean driveReverse, boolean turnReverse) {
+  public SwerveModule(int driveMotorChannel, int turningMotorChannel, int turningEncoder, Rotation2d offset, boolean driveReverse, boolean turnReverse, String name) {
     m_drivePIDController = new PIDController(1, 0, 0);
 
     m_turningPIDController =
@@ -73,6 +75,15 @@ public class SwerveModule extends SubsystemBase {
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous.
     m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
+
+    // LOGGING
+    Shuffleboard.getTab(name).addString("current_state_string", () -> this.getState().toString());
+    Shuffleboard.getTab(name).addString("goal_state_string", () -> state.toString());
+    Shuffleboard.getTab(name).addNumber("drive_position_native_units", () -> m_driveMotor.getSelectedSensorPosition());
+    Shuffleboard.getTab(name).addNumber("drive_position_converted",
+        () -> m_driveMotor.getSelectedSensorPosition() * 10 / DriveConstants.kDriveEncoderResolution * Math.PI * DriveConstants.kWheelDiameter / 5.25);
+    Shuffleboard.getTab(name).add("drive pid", m_drivePIDController);
+    Shuffleboard.getTab(name).add("turn pid", m_turningPIDController);
   }
 
   /**
@@ -81,15 +92,15 @@ public class SwerveModule extends SubsystemBase {
    * @return The current state of the module.
    */
   public SwerveModuleState getState() {
-    return new SwerveModuleState(getDriveMotorEncoder(), new Rotation2d(getTurningMotorEncoder()));
+    return new SwerveModuleState(getDriveMotorSpeed(), new Rotation2d(getTurningMotorPosition()));
   }
 
-  private double getDriveMotorEncoder() {
+  private double getDriveMotorSpeed() {
     return m_driveMotor.getSelectedSensorVelocity() * 10 / DriveConstants.kDriveEncoderResolution * Math.PI
         * DriveConstants.kWheelDiameter / 5.25;
   }
 
-  private double getTurningMotorEncoder() {
+  private double getTurningMotorPosition() {
     return Math.toRadians(m_turningEncoder.getAbsolutePosition());
   }
   
@@ -102,17 +113,17 @@ public class SwerveModule extends SubsystemBase {
   public void setDesiredState(SwerveModuleState desiredState) {
     // Optimize the reference state to avoid spinning further than 90 degrees
     SwerveModuleState state =
-        SwerveModuleState.optimize(desiredState, new Rotation2d(getTurningMotorEncoder()));
+        SwerveModuleState.optimize(desiredState, new Rotation2d(m_turningEncoder.getAbsolutePosition()));
 
     // Calculate the drive output from the drive PID controller.
     final double driveOutput =
-        m_drivePIDController.calculate(getDriveMotorEncoder(), state.speedMetersPerSecond);
+        m_drivePIDController.calculate(getDriveMotorSpeed(), state.speedMetersPerSecond);
 
     final double driveFeedforward = m_driveFeedforward.calculate(state.speedMetersPerSecond);
 
     // Calculate the turning motor output from the turning PID controller.
     final double turnOutput =
-        m_turningPIDController.calculate(getTurningMotorEncoder(), state.angle.getRadians());
+        m_turningPIDController.calculate(getTurningMotorPosition(), state.angle.getRadians());
 
     final double turnFeedforward =
         m_turnFeedforward.calculate(m_turningPIDController.getSetpoint().velocity);
