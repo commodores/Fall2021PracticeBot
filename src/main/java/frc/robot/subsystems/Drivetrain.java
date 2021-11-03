@@ -75,8 +75,8 @@ public class Drivetrain extends SubsystemBase {
     var swerveModuleStates =
         m_kinematics.toSwerveModuleStates(
             fieldRelative
-                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_gyro.getRotation2d())
-                : new ChassisSpeeds(xSpeed, ySpeed, rot));
+                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, -ySpeed, -rot, m_gyro.getRotation2d())
+                : new ChassisSpeeds(xSpeed, -ySpeed, -rot));
     SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeed);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
     m_frontRight.setDesiredState(swerveModuleStates[1]);
@@ -95,4 +95,5 @@ public class Drivetrain extends SubsystemBase {
         m_backRight.getState());
         m_field.setRobotPose(m_odometry.getPoseMeters());
   }
+  
 }
