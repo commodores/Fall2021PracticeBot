@@ -50,7 +50,7 @@ public class RobotContainer {
   private void initializeStartup()
   {
     m_swerve.setDefaultCommand(
-      new DriveManual(m_swerve, true));
+      new DriveManual(m_swerve, false));
   }
  
 

@@ -26,10 +26,10 @@ public final class Constants {
 
         public static final int kDriveEncoderResolution = 2048;
 
-        public static final Rotation2d kFrontLeftOffset = Rotation2d.fromDegrees(8.3); //8.4
-        public static final Rotation2d kFrontRightOffset = Rotation2d.fromDegrees(135); //132
+        public static final Rotation2d kFrontLeftOffset = Rotation2d.fromDegrees(-8.88); //8.4
+        public static final Rotation2d kFrontRightOffset = Rotation2d.fromDegrees(-126.470); //132
         public static final Rotation2d kBackLeftOffset = Rotation2d.fromDegrees(0); //0
-        public static final Rotation2d kBackRightOffset = Rotation2d.fromDegrees(45); //45
+        public static final Rotation2d kBackRightOffset = Rotation2d.fromDegrees(-42.80); //45
 
         //CAN IDS for Motors and Encoders
         public static final int kFrontLeftDriveChannel = 10;

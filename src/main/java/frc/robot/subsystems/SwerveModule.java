@@ -56,8 +56,8 @@ public class SwerveModule extends SubsystemBase {
           new TrapezoidProfile.Constraints(
               kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration));
 
-    m_driveFeedforward = new SimpleMotorFeedforward(.15,.15);        //1, 3);
-    m_turnFeedforward = new SimpleMotorFeedforward(.15,.15);         //1, 0.5);
+    m_driveFeedforward = new SimpleMotorFeedforward(1,3);        //1, 3);
+    m_turnFeedforward = new SimpleMotorFeedforward(.75,.25);         //1, 0.5);
 
     m_driveMotor = new WPI_TalonFX(driveMotorChannel);
     m_driveMotor.configFactoryDefault();
@@ -70,8 +70,8 @@ public class SwerveModule extends SubsystemBase {
     m_turningEncoder = new CANCoder(turningEncoder);
 
     m_turningEncoder.setPositionToAbsolute();
-    //m_turningEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
-    m_turningEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
+    m_turningEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
+    //m_turningEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
     m_turningEncoder.configMagnetOffset(0 - m_turningEncoderOffset.getDegrees(), 10);
 
     // Limit the PID Controller's input range between -pi and pi and set the input
@@ -115,7 +115,7 @@ public class SwerveModule extends SubsystemBase {
   public void setDesiredState(SwerveModuleState desiredState) {
     // Optimize the reference state to avoid spinning further than 90 degrees
     SwerveModuleState state =
-        SwerveModuleState.optimize(desiredState, new Rotation2d(m_turningEncoder.getAbsolutePosition()));
+        SwerveModuleState.optimize(desiredState, new Rotation2d(getTurningMotorPosition()));
 
     // Calculate the drive output from the drive PID controller.
     final double driveOutput =

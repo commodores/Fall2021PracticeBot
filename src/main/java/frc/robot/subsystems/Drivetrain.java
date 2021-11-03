@@ -10,10 +10,12 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
+import edu.wpi.first.wpilibj.SerialPort;
 
 public class Drivetrain extends SubsystemBase {
 
@@ -47,7 +49,7 @@ public class Drivetrain extends SubsystemBase {
     m_backLeft = new SwerveModule(DriveConstants.kBackLeftDriveChannel, DriveConstants.kBackLeftTurnChannel, DriveConstants.kBackLeftEncoderChannel, DriveConstants.kBackLeftOffset, true, true, "BL");
     m_backRight = new SwerveModule(DriveConstants.kBackRightDriveChannel, DriveConstants.kBackRightTurnChannel, DriveConstants.kBackRightEncoderChannel, DriveConstants.kBackRightOffset, true, true, "BR");
 
-    m_gyro = new AHRS(SPI.Port.kMXP);
+    m_gyro = new AHRS(SerialPort.Port.kUSB1);
 
     m_field = new Field2d();
 
@@ -60,6 +62,7 @@ public class Drivetrain extends SubsystemBase {
 
     m_gyro.reset();
     SmartDashboard.putData("Field", m_field);
+    
   }
 
   /**
@@ -94,6 +97,8 @@ public class Drivetrain extends SubsystemBase {
         m_backLeft.getState(),
         m_backRight.getState());
         m_field.setRobotPose(m_odometry.getPoseMeters());
+    
+        SmartDashboard.putNumber("Gyro", m_gyro.getYaw());
   }
   
 }
