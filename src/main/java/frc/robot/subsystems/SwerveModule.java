@@ -56,21 +56,23 @@ public class SwerveModule extends SubsystemBase {
           new TrapezoidProfile.Constraints(
               kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration));
 
-    m_driveFeedforward = new SimpleMotorFeedforward(1, 3);
-    m_turnFeedforward = new SimpleMotorFeedforward(1, 0.5);
+    m_driveFeedforward = new SimpleMotorFeedforward(.15,.15);        //1, 3);
+    m_turnFeedforward = new SimpleMotorFeedforward(.15,.15);         //1, 0.5);
 
     m_driveMotor = new WPI_TalonFX(driveMotorChannel);
-    m_turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
-
+    m_driveMotor.configFactoryDefault();
     m_driveMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+
+    m_turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
 
     m_turningEncoderOffset = offset;
     
     m_turningEncoder = new CANCoder(turningEncoder);
 
     m_turningEncoder.setPositionToAbsolute();
-    m_turningEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
-    m_turningEncoder.configMagnetOffset(m_turningEncoderOffset.getDegrees());
+    //m_turningEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
+    m_turningEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
+    m_turningEncoder.configMagnetOffset(0 - m_turningEncoderOffset.getDegrees(), 10);
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous.
