@@ -43,7 +43,7 @@ public class SwerveModule extends SubsystemBase {
   private final SimpleMotorFeedforward m_turnFeedforward;
 
   /** Creates a new SwerveModule. */
-  public SwerveModule(int driveMotorChannel, int turningMotorChannel, int turningEncoder, Rotation2d offset) {
+  public SwerveModule(int driveMotorChannel, int turningMotorChannel, int turningEncoder, Rotation2d offset, boolean driveReverse, boolean turnReverse) {
     m_drivePIDController = new PIDController(1, 0, 0);
 
     m_turningPIDController =
@@ -92,6 +92,7 @@ public class SwerveModule extends SubsystemBase {
   private double getTurningMotorEncoder() {
     return Math.toRadians(m_turningEncoder.getAbsolutePosition());
   }
+  
 
   /**
    * Sets the desired state for the module.

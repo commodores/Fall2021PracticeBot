@@ -42,10 +42,10 @@ public class Drivetrain extends SubsystemBase {
     m_backLeftLocation = new Translation2d(-DriveConstants.kRobotLength / 2, DriveConstants.kRobotWidth /2);
     m_backRightLocation = new Translation2d(-DriveConstants.kRobotLength / 2, -DriveConstants.kRobotWidth /2);
 
-    m_frontLeft = new SwerveModule(DriveConstants.kFrontLeftDriveChannel, DriveConstants.kFrontLeftTurnChannel, DriveConstants.kFrontLeftEncoderChannel,  DriveConstants.kFrontLeftOffset);
-    m_frontRight = new SwerveModule(DriveConstants.kFrontRightDriveChannel, DriveConstants.kFrontRightTurnChannel, DriveConstants.kFrontRightEncoderChannel, DriveConstants.kFrontRightOffset);
-    m_backLeft = new SwerveModule(DriveConstants.kBackLeftDriveChannel, DriveConstants.kBackLeftTurnChannel, DriveConstants.kBackLeftEncoderChannel, DriveConstants.kBackLeftOffset);
-    m_backRight = new SwerveModule(DriveConstants.kBackRightDriveChannel, DriveConstants.kBackRightTurnChannel, DriveConstants.kBackRightEncoderChannel, DriveConstants.kBackRightOffset);
+    m_frontLeft = new SwerveModule(DriveConstants.kFrontLeftDriveChannel, DriveConstants.kFrontLeftTurnChannel, DriveConstants.kFrontLeftEncoderChannel,  DriveConstants.kFrontLeftOffset, true, true);
+    m_frontRight = new SwerveModule(DriveConstants.kFrontRightDriveChannel, DriveConstants.kFrontRightTurnChannel, DriveConstants.kFrontRightEncoderChannel, DriveConstants.kFrontRightOffset, true, true);
+    m_backLeft = new SwerveModule(DriveConstants.kBackLeftDriveChannel, DriveConstants.kBackLeftTurnChannel, DriveConstants.kBackLeftEncoderChannel, DriveConstants.kBackLeftOffset, true, true);
+    m_backRight = new SwerveModule(DriveConstants.kBackRightDriveChannel, DriveConstants.kBackRightTurnChannel, DriveConstants.kBackRightEncoderChannel, DriveConstants.kBackRightOffset, true, true);
 
     m_gyro = new AHRS(SPI.Port.kMXP);
 
