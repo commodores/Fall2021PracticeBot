@@ -48,9 +48,9 @@ public class SwerveModule extends SubsystemBase {
 
     m_turningPIDController =
       new ProfiledPIDController(
-          1.85,
+          3,
           0,
-          0,
+          .01,
           new TrapezoidProfile.Constraints(
               kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration));
 
