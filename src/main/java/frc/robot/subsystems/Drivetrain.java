@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
@@ -44,10 +45,10 @@ public class Drivetrain extends SubsystemBase {
     m_backLeftLocation = new Translation2d(-DriveConstants.kRobotLength / 2, DriveConstants.kRobotWidth /2);
     m_backRightLocation = new Translation2d(-DriveConstants.kRobotLength / 2, -DriveConstants.kRobotWidth /2);
 
-    m_frontLeft = new SwerveModule(DriveConstants.kFrontLeftDriveChannel, DriveConstants.kFrontLeftTurnChannel, DriveConstants.kFrontLeftEncoderChannel,  DriveConstants.kFrontLeftOffset, true, true, "FL");
-    m_frontRight = new SwerveModule(DriveConstants.kFrontRightDriveChannel, DriveConstants.kFrontRightTurnChannel, DriveConstants.kFrontRightEncoderChannel, DriveConstants.kFrontRightOffset, true, true, "FR");
-    m_backLeft = new SwerveModule(DriveConstants.kBackLeftDriveChannel, DriveConstants.kBackLeftTurnChannel, DriveConstants.kBackLeftEncoderChannel, DriveConstants.kBackLeftOffset, true, true, "BL");
-    m_backRight = new SwerveModule(DriveConstants.kBackRightDriveChannel, DriveConstants.kBackRightTurnChannel, DriveConstants.kBackRightEncoderChannel, DriveConstants.kBackRightOffset, true, true, "BR");
+    m_frontLeft = new SwerveModule(DriveConstants.kFrontLeftDriveChannel, DriveConstants.kFrontLeftTurnChannel, DriveConstants.kFrontLeftEncoderChannel, true, true, "FL");
+    m_frontRight = new SwerveModule(DriveConstants.kFrontRightDriveChannel, DriveConstants.kFrontRightTurnChannel, DriveConstants.kFrontRightEncoderChannel, true, true, "FR");
+    m_backLeft = new SwerveModule(DriveConstants.kBackLeftDriveChannel, DriveConstants.kBackLeftTurnChannel, DriveConstants.kBackLeftEncoderChannel, true, true, "BL");
+    m_backRight = new SwerveModule(DriveConstants.kBackRightDriveChannel, DriveConstants.kBackRightTurnChannel, DriveConstants.kBackRightEncoderChannel, true, true, "BR");
 
     m_gyro = new AHRS(SerialPort.Port.kUSB1);
 
@@ -58,7 +59,7 @@ public class Drivetrain extends SubsystemBase {
             m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
                                       
     m_odometry =
-        new SwerveDriveOdometry(m_kinematics, m_gyro.getRotation2d());
+        new SwerveDriveOdometry(m_kinematics, new Rotation2d(-m_gyro.getAngle()));
 
     m_gyro.reset();
     SmartDashboard.putData("Field", m_field);
@@ -78,8 +79,8 @@ public class Drivetrain extends SubsystemBase {
     var swerveModuleStates =
         m_kinematics.toSwerveModuleStates(
             fieldRelative
-                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, -ySpeed, -rot, m_gyro.getRotation2d())
-                : new ChassisSpeeds(xSpeed, -ySpeed, -rot));
+                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_gyro.getRotation2d())
+                : new ChassisSpeeds(xSpeed, ySpeed, rot));
     SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeed);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
     m_frontRight.setDesiredState(swerveModuleStates[1]);

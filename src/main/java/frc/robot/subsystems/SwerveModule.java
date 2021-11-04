@@ -30,8 +30,6 @@ public class SwerveModule extends SubsystemBase {
   private final WPI_TalonFX m_driveMotor;
   private final CANSparkMax m_turningMotor;
 
-  private final Rotation2d m_turningEncoderOffset;
-
   private final CANCoder m_turningEncoder;
 
   private final PIDController m_drivePIDController;
@@ -45,34 +43,33 @@ public class SwerveModule extends SubsystemBase {
   private final SimpleMotorFeedforward m_turnFeedforward;
 
   /** Creates a new SwerveModule. */
-  public SwerveModule(int driveMotorChannel, int turningMotorChannel, int turningEncoder, Rotation2d offset, boolean driveReverse, boolean turnReverse, String name) {
+  public SwerveModule(int driveMotorChannel, int turningMotorChannel, int turningEncoder, boolean driveReverse, boolean turnReverse, String name) {
     m_drivePIDController = new PIDController(1, 0, 0);
 
     m_turningPIDController =
       new ProfiledPIDController(
-          1.7,
+          1.85,
           0,
           0,
           new TrapezoidProfile.Constraints(
               kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration));
 
     m_driveFeedforward = new SimpleMotorFeedforward(1,3);        //1, 3);
-    m_turnFeedforward = new SimpleMotorFeedforward(.75,.25);         //1, 0.5);
+    m_turnFeedforward = new SimpleMotorFeedforward(1,.5);         //1, 0.5);
 
     m_driveMotor = new WPI_TalonFX(driveMotorChannel);
     m_driveMotor.configFactoryDefault();
+    m_driveMotor.setInverted(driveReverse);
+    m_driveMotor.configOpenloopRamp(.1);
     m_driveMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
 
     m_turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
-
-    m_turningEncoderOffset = offset;
+    m_turningMotor.setInverted(turnReverse);
+    m_turningMotor.setOpenLoopRampRate(.05);
     
     m_turningEncoder = new CANCoder(turningEncoder);
 
     m_turningEncoder.setPositionToAbsolute();
-    m_turningEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
-    //m_turningEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
-    m_turningEncoder.configMagnetOffset(0 - m_turningEncoderOffset.getDegrees(), 10);
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous.
