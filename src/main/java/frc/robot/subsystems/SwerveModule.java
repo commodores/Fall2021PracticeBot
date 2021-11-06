@@ -5,10 +5,12 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
@@ -42,8 +44,6 @@ public class SwerveModule extends SubsystemBase {
   private final SimpleMotorFeedforward m_driveFeedforward;
   private final SimpleMotorFeedforward m_turnFeedforward;
 
-  private final String ModuleName;
-
   /** Creates a new SwerveModule. */
   public SwerveModule(int driveMotorChannel, int turningMotorChannel, int turningEncoder, boolean driveReverse, boolean turnReverse, String name) {
     m_drivePIDController = new PIDController(1, 0, 0);
@@ -62,12 +62,20 @@ public class SwerveModule extends SubsystemBase {
     m_driveMotor = new WPI_TalonFX(driveMotorChannel);
     m_driveMotor.configFactoryDefault();
     m_driveMotor.setInverted(driveReverse);
-    m_driveMotor.configOpenloopRamp(.1);
+    //m_driveMotor.configOpenloopRamp(.1);
+    m_driveMotor.setNeutralMode(NeutralMode.Brake);
+    m_driveMotor.configStatorCurrentLimit(DriveConstants.TALON_CURRENT_LIMIT);
+    m_driveMotor.configVoltageCompSaturation(DriveConstants.kVoltageCompensation);
+
     m_driveMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
 
     m_turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
     m_turningMotor.setInverted(turnReverse);
-    m_turningMotor.setOpenLoopRampRate(.05);
+    //m_turningMotor.setOpenLoopRampRate(.05);
+    m_turningMotor.setSmartCurrentLimit(DriveConstants.kRevContinuosCurrentLimit);
+    m_turningMotor.setSecondaryCurrentLimit(DriveConstants.kRevPeakCurrentLimit);
+    m_turningMotor.enableVoltageCompensation(DriveConstants.kVoltageCompensation);
+    m_turningMotor.setIdleMode(IdleMode.kCoast);
     
     m_turningEncoder = new CANCoder(turningEncoder);
 
@@ -85,8 +93,6 @@ public class SwerveModule extends SubsystemBase {
         () -> m_driveMotor.getSelectedSensorPosition() * 10 / DriveConstants.kDriveEncoderResolution * Math.PI * DriveConstants.kWheelDiameter / 5.25);
     Shuffleboard.getTab(name).add("drive pid", m_drivePIDController);
     Shuffleboard.getTab(name).add("turn pid", m_turningPIDController);
-
-    ModuleName = name;
     
   }
 

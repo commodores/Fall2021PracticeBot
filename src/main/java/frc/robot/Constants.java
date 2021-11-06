@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
+
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 
 /**
@@ -17,6 +19,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 public final class Constants {
 
     public static final class DriveConstants {
+        
         public static final double kMaxSpeed = 2.5; // 3 meters per second
         public static final double kMaxAngularSpeed = 4*Math.PI; // 1/2 rotation per second
 
@@ -30,6 +33,15 @@ public final class Constants {
         public static final Rotation2d kFrontRightOffset = Rotation2d.fromDegrees(-126.470); //132
         public static final Rotation2d kBackLeftOffset = Rotation2d.fromDegrees(0); //0
         public static final Rotation2d kBackRightOffset = Rotation2d.fromDegrees(-42.80); //45
+
+        //Power Management for Drivetrain
+        public static StatorCurrentLimitConfiguration TALON_CURRENT_LIMIT = new StatorCurrentLimitConfiguration(true, 60, 40, 1.0);
+
+        public static int kVoltageCompensation = 12;
+
+        public static int kRevContinuosCurrentLimit = 15;
+        public static int kRevPeakCurrentLimit = 30;
+        
 
         //CAN IDS for Motors and Encoders
         public static final int kFrontLeftDriveChannel = 10;
