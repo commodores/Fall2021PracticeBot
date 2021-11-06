@@ -25,7 +25,7 @@ import frc.robot.Constants.DriveConstants;
 public class SwerveModule extends SubsystemBase {
   
   private static final double kModuleMaxAngularVelocity = DriveConstants.kMaxAngularSpeed;
-  private static final double kModuleMaxAngularAcceleration = 2 * Math.PI; // radians per second squared
+  private static final double kModuleMaxAngularAcceleration = 4 * Math.PI; // radians per second squared
 
   private final WPI_TalonFX m_driveMotor;
   private final CANSparkMax m_turningMotor;
@@ -42,15 +42,17 @@ public class SwerveModule extends SubsystemBase {
   private final SimpleMotorFeedforward m_driveFeedforward;
   private final SimpleMotorFeedforward m_turnFeedforward;
 
+  private final String ModuleName;
+
   /** Creates a new SwerveModule. */
   public SwerveModule(int driveMotorChannel, int turningMotorChannel, int turningEncoder, boolean driveReverse, boolean turnReverse, String name) {
     m_drivePIDController = new PIDController(1, 0, 0);
 
     m_turningPIDController =
       new ProfiledPIDController(
-          3,
+          3.0, //3.2
           0,
-          .01,
+          .02, //.01
           new TrapezoidProfile.Constraints(
               kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration));
 
@@ -83,6 +85,9 @@ public class SwerveModule extends SubsystemBase {
         () -> m_driveMotor.getSelectedSensorPosition() * 10 / DriveConstants.kDriveEncoderResolution * Math.PI * DriveConstants.kWheelDiameter / 5.25);
     Shuffleboard.getTab(name).add("drive pid", m_drivePIDController);
     Shuffleboard.getTab(name).add("turn pid", m_turningPIDController);
+
+    ModuleName = name;
+    
   }
 
   /**

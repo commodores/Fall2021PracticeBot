@@ -17,8 +17,8 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 public final class Constants {
 
     public static final class DriveConstants {
-        public static final double kMaxSpeed = 3.0; // 3 meters per second
-        public static final double kMaxAngularSpeed = Math.PI; // 1/2 rotation per second
+        public static final double kMaxSpeed = 2.5; // 3 meters per second
+        public static final double kMaxAngularSpeed = 4*Math.PI; // 1/2 rotation per second
 
         public static final double kRobotLength = 0.6096;
         public static final double kRobotWidth = 0.6096;
