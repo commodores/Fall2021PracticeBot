@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -15,19 +14,14 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
-//import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.ModuleConstants;
 
 public class SwerveModule extends SubsystemBase {
-  
-  private static final double kModuleMaxAngularVelocity = DriveConstants.kMaxAngularSpeed;
-  private static final double kModuleMaxAngularAcceleration = 4 * Math.PI; // radians per second squared
 
   private final WPI_TalonFX m_driveMotor;
   private final CANSparkMax m_turningMotor;
@@ -40,31 +34,25 @@ public class SwerveModule extends SubsystemBase {
 
   private SwerveModuleState state = new SwerveModuleState();
 
-  // Gains are for example purposes only - must be determined for your own robot!
-  private final SimpleMotorFeedforward m_driveFeedforward;
-  private final SimpleMotorFeedforward m_turnFeedforward;
-
   /** Creates a new SwerveModule. */
-  public SwerveModule(int driveMotorChannel, int turningMotorChannel, int turningEncoder, boolean driveReverse, boolean turnReverse, String name) {
-    m_drivePIDController = new PIDController(1, 0, 0);
+  public SwerveModule(int driveMotorChannel, int turningMotorChannel, int turningEncoder, boolean driveReverse, boolean turnReverse) {
+    m_drivePIDController = new PIDController(ModuleConstants.kPModuleDriveController, 0, 0);
 
     m_turningPIDController =
       new ProfiledPIDController(
-          3.0, //3.2
+          ModuleConstants.kPModuleTurningController,
           0,
-          .02, //.01
+          0,
           new TrapezoidProfile.Constraints(
-              kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration));
-
-    m_driveFeedforward = new SimpleMotorFeedforward(1,3);        //1, 3);
-    m_turnFeedforward = new SimpleMotorFeedforward(1,.5);         //1, 0.5);
+            ModuleConstants.kMaxModuleAngularSpeedRadiansPerSecond,
+            ModuleConstants.kMaxModuleAngularAccelerationRadiansPerSecondSquared));
 
     m_driveMotor = new WPI_TalonFX(driveMotorChannel);
     m_driveMotor.configFactoryDefault();
     m_driveMotor.setInverted(driveReverse);
     //m_driveMotor.configOpenloopRamp(.1);
     m_driveMotor.setNeutralMode(NeutralMode.Brake);
-    m_driveMotor.configStatorCurrentLimit(DriveConstants.TALON_CURRENT_LIMIT);
+    m_driveMotor.configStatorCurrentLimit(DriveConstants.kTalonCurrentConfig);
     m_driveMotor.configVoltageCompSaturation(DriveConstants.kVoltageCompensation);
 
     m_driveMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
@@ -84,15 +72,6 @@ public class SwerveModule extends SubsystemBase {
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous.
     m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
-
-    // LOGGING
-    Shuffleboard.getTab(name).addString("current_state_string", () -> this.getState().toString());
-    Shuffleboard.getTab(name).addString("goal_state_string", () -> state.toString());
-    Shuffleboard.getTab(name).addNumber("drive_position_native_units", () -> m_driveMotor.getSelectedSensorPosition());
-    Shuffleboard.getTab(name).addNumber("drive_position_converted",
-        () -> m_driveMotor.getSelectedSensorPosition() * 10 / DriveConstants.kDriveEncoderResolution * Math.PI * DriveConstants.kWheelDiameter / 5.25);
-    Shuffleboard.getTab(name).add("drive pid", m_drivePIDController);
-    Shuffleboard.getTab(name).add("turn pid", m_turningPIDController);
     
   }
 
@@ -107,7 +86,7 @@ public class SwerveModule extends SubsystemBase {
 
   private double getDriveMotorSpeed() {
     return m_driveMotor.getSelectedSensorVelocity() * 10 / DriveConstants.kDriveEncoderResolution * Math.PI
-        * DriveConstants.kWheelDiameter / 5.25;
+        * DriveConstants.kWheelDiameter / DriveConstants.kDriveGearRatio;
   }
 
   private double getTurningMotorPosition() {
@@ -129,14 +108,14 @@ public class SwerveModule extends SubsystemBase {
     final double driveOutput =
         m_drivePIDController.calculate(getDriveMotorSpeed(), state.speedMetersPerSecond);
 
-    final double driveFeedforward = m_driveFeedforward.calculate(state.speedMetersPerSecond);
+    final double driveFeedforward = ModuleConstants.m_driveFeedforward.calculate(state.speedMetersPerSecond);
 
     // Calculate the turning motor output from the turning PID controller.
     final double turnOutput =
         m_turningPIDController.calculate(getTurningMotorPosition(), state.angle.getRadians());
 
     final double turnFeedforward =
-        m_turnFeedforward.calculate(m_turningPIDController.getSetpoint().velocity);
+    ModuleConstants.m_turnFeedforward.calculate(m_turningPIDController.getSetpoint().velocity);
 
     m_driveMotor.setVoltage(driveOutput + driveFeedforward);
     m_turningMotor.setVoltage(turnOutput + turnFeedforward);

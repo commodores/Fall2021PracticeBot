@@ -28,10 +28,13 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
     // Configure the button bindings
     configureButtonBindings();
+
     /* Initialize various systems on robotInit. */
     this.initializeStartup();
+
     /* Initialize autonomous command chooser and display on the SmartDashboard. */
     this.initializeAutoChooser();
   }
@@ -50,13 +53,15 @@ public class RobotContainer {
   private void initializeStartup()
   {
     m_swerve.setDefaultCommand(
-      new DriveManual(m_swerve, true));
+      new DriveManual(m_swerve, true)); //Setup default command for drivetrain and set field relative or robot relative drive
   }
  
 
   private void initializeAutoChooser()
   {
-    /* Add options (which autonomous commands can be selected) to chooser. */
+    /* Add options (which autonomous commands can be selected) to chooser.
+       This is just an example
+    */
     m_autoChooser.setDefaultOption("Do Nothing", "doNothing");
     m_autoChooser.addOption("Other Awesome Auto", "auto1");
     m_autoChooser.addOption("Other Awesome Auto", "auto2");
