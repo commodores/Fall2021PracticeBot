@@ -7,10 +7,10 @@ package frc.robot.subsystems;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,11 +18,6 @@ import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj.SerialPort;
 
 public class Drivetrain extends SubsystemBase {
-
-  private final Translation2d m_frontLeftLocation;
-  private final Translation2d m_frontRightLocation;
-  private final Translation2d m_backLeftLocation;
-  private final Translation2d m_backRightLocation;
 
   private final SwerveModule m_frontLeft;
   private final SwerveModule m_frontRight;
@@ -33,16 +28,10 @@ public class Drivetrain extends SubsystemBase {
 
   private final Field2d m_field;
 
-  private final SwerveDriveKinematics m_kinematics;
   private final SwerveDriveOdometry m_odometry;
 
   /** Creates a new Drivetrain. */
   public Drivetrain() {
-    
-    m_frontLeftLocation = new Translation2d(DriveConstants.kRobotLength / 2, DriveConstants.kRobotWidth /2);
-    m_frontRightLocation = new Translation2d(DriveConstants.kRobotLength / 2, -DriveConstants.kRobotWidth /2);
-    m_backLeftLocation = new Translation2d(-DriveConstants.kRobotLength / 2, DriveConstants.kRobotWidth /2);
-    m_backRightLocation = new Translation2d(-DriveConstants.kRobotLength / 2, -DriveConstants.kRobotWidth /2);
 
     m_frontLeft = new SwerveModule(DriveConstants.kFrontLeftDriveChannel, DriveConstants.kFrontLeftTurnChannel, DriveConstants.kFrontLeftEncoderChannel, true, true);
     m_frontRight = new SwerveModule(DriveConstants.kFrontRightDriveChannel, DriveConstants.kFrontRightTurnChannel, DriveConstants.kFrontRightEncoderChannel, true, true);
@@ -53,12 +42,9 @@ public class Drivetrain extends SubsystemBase {
 
     m_field = new Field2d();
 
-    m_kinematics =
-        new SwerveDriveKinematics(
-            m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
                                       
     m_odometry =
-        new SwerveDriveOdometry(m_kinematics, new Rotation2d(-m_gyro.getAngle()));
+        new SwerveDriveOdometry(DriveConstants.kDriveKinematics, new Rotation2d(-m_gyro.getAngle()));
 
     m_gyro.reset();
     SmartDashboard.putData("Field", m_field);
@@ -94,7 +80,7 @@ public class Drivetrain extends SubsystemBase {
   @SuppressWarnings("ParameterName")
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
     var swerveModuleStates =
-        m_kinematics.toSwerveModuleStates(
+        DriveConstants.kDriveKinematics.toSwerveModuleStates(
             fieldRelative
                 ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_gyro.getRotation2d())
                 : new ChassisSpeeds(xSpeed, ySpeed, rot));
@@ -103,6 +89,20 @@ public class Drivetrain extends SubsystemBase {
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_backLeft.setDesiredState(swerveModuleStates[2]);
     m_backRight.setDesiredState(swerveModuleStates[3]);
+  }
+
+  /**
+   * Sets the swerve ModuleStates.
+   *
+   * @param desiredStates The desired SwerveModule states.
+   */
+  public void setModuleStates(SwerveModuleState[] desiredStates) {
+    SwerveDriveKinematics.normalizeWheelSpeeds(
+        desiredStates, DriveConstants.kMaxSpeedMetersPerSecond);
+    m_frontLeft.setDesiredState(desiredStates[0]);
+    m_frontRight.setDesiredState(desiredStates[1]);
+    m_backLeft.setDesiredState(desiredStates[2]);
+    m_backRight.setDesiredState(desiredStates[3]);
   }
 
   @Override

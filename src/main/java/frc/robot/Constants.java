@@ -8,6 +8,8 @@ import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 
 /**
@@ -23,9 +25,18 @@ public final class Constants {
     public static final class DriveConstants {
         
         //Robot Characteristics
-        public static final double kRobotLength = 0.6096;
-        public static final double kRobotWidth = 0.6096;
         public static final double kWheelDiameter = 0.0762;
+
+        public static final double kTrackWidth = 0.6096;
+        // Distance between centers of right and left wheels on robot
+        public static final double kWheelBase = 0.6096;
+        // Distance between front and back wheels on robot
+        public static final SwerveDriveKinematics kDriveKinematics =
+            new SwerveDriveKinematics(
+                new Translation2d(kWheelBase / 2, kTrackWidth / 2),
+                new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
+                new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
+                new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
         public static final int kDriveEncoderResolution = 2048;
         public static final double kDriveGearRatio = 5.25;
@@ -83,7 +94,7 @@ public final class Constants {
         public static final SimpleMotorFeedforward m_turnFeedforward = new SimpleMotorFeedforward(1,.5);
       }
 
-      public static final class AutoConstants {
+    public static final class AutoConstants {
         public static final double kMaxSpeedMetersPerSecond = 3;
         public static final double kMaxAccelerationMetersPerSecondSquared = 3;
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
