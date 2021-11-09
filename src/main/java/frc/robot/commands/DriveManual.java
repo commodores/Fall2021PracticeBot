@@ -43,14 +43,14 @@ public class DriveManual extends CommandBase {
     // negative values when we push forward.
     // We are using the Y of the controller to conrol the X of the robot because the X of the field is from DS to DS
     final var xSpeed =
-        m_xspeedLimiter.calculate(RobotContainer.m_controller.getY(GenericHID.Hand.kLeft))
+        -m_xspeedLimiter.calculate(RobotContainer.m_controller.getY(GenericHID.Hand.kLeft))
             * DriveConstants.kMaxSpeedMetersPerSecond;
 
     // Get the y speed or sideways/strafe speed. We are inverting this because
     // we want a positive value when we pull to the left. Xbox controllers
     // return positive values when you pull to the right by default.
     final var ySpeed =
-        m_yspeedLimiter.calculate(RobotContainer.m_controller.getX(GenericHID.Hand.kLeft))
+        -m_yspeedLimiter.calculate(RobotContainer.m_controller.getX(GenericHID.Hand.kLeft))
             * DriveConstants.kMaxSpeedMetersPerSecond;
 
     // Get the rate of angular rotation. We are inverting this because we want a
@@ -58,7 +58,7 @@ public class DriveManual extends CommandBase {
     // mathematics). Xbox controllers return positive values when you pull to
     // the right by default.
     final var rot =
-        m_rotLimiter.calculate(RobotContainer.m_controller.getX(GenericHID.Hand.kRight))
+        -m_rotLimiter.calculate(RobotContainer.m_controller.getX(GenericHID.Hand.kRight))
             * ModuleConstants.kMaxModuleAngularSpeedRadiansPerSecond;
 
     m_swerve.drive(xSpeed, ySpeed, rot, fieldRelative);
