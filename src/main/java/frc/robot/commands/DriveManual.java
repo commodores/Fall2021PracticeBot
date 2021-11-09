@@ -51,7 +51,7 @@ public class DriveManual extends CommandBase {
     // return positive values when you pull to the right by default.
     final var ySpeed =
         -m_yspeedLimiter.calculate(RobotContainer.m_controller.getX(GenericHID.Hand.kLeft))
-            * DriveConstants.kMaxSpeedMetersPerSecond;
+            * DriveConstants.kMaxSpeedMetersPerSecond * .6;
 
     // Get the rate of angular rotation. We are inverting this because we want a
     // positive value when we pull to the left (remember, CCW is positive in
