@@ -69,6 +69,14 @@ public class Drivetrain extends SubsystemBase {
     m_odometry.resetPosition(pose, m_gyro.getRotation2d());
   }
 
+  public void resetAll(){
+    m_gyro.reset();
+    m_frontLeft.resetEncoder();
+    m_frontRight.resetEncoder();
+    m_backLeft.resetEncoder();
+    m_backRight.resetEncoder();
+  }
+
   /**
    * Method to drive the robot using joystick info.
    *

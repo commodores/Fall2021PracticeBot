@@ -92,6 +92,10 @@ public class SwerveModule extends SubsystemBase {
   private double getTurningMotorPosition() {
     return Math.toRadians(m_turningEncoder.getAbsolutePosition());
   }
+
+  public void resetEncoder(){
+    m_driveMotor.setSelectedSensorPosition(0);
+  }
   
 
   /**
