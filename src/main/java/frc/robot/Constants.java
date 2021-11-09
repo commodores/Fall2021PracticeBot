@@ -83,10 +83,10 @@ public final class Constants {
     }
 
     public static final class ModuleConstants {
-        public static final double kMaxModuleAngularSpeedRadiansPerSecond = 2 * Math.PI;
-        public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared = 2 * Math.PI;
+        public static final double kMaxModuleAngularSpeedRadiansPerSecond = 4 * Math.PI;
+        public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared = 4 * Math.PI;
     
-        public static final double kPModuleTurningController = 3.5;
+        public static final double kPModuleTurningController = 3.6;//3.5
     
         public static final double kPModuleDriveController = 1;
 
