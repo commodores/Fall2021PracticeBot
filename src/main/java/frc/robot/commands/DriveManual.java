@@ -27,8 +27,8 @@ public class DriveManual extends CommandBase {
 
     fieldRelative = getFieldRelative;
 
-    m_xspeedLimiter = new SlewRateLimiter(3); 
-    m_yspeedLimiter = new SlewRateLimiter(.5);
+    m_xspeedLimiter = new SlewRateLimiter(5); 
+    m_yspeedLimiter = new SlewRateLimiter(5);
     m_rotLimiter = new SlewRateLimiter(5);
   }
 
@@ -58,7 +58,7 @@ public class DriveManual extends CommandBase {
     // return positive values when you pull to the right by default.
     final var ySpeed =
         -m_yspeedLimiter.calculate(deadX)
-            * DriveConstants.kMaxSpeedMetersPerSecond * .6;
+            * DriveConstants.kMaxSpeedMetersPerSecond;
 
     // Get the rate of angular rotation. We are inverting this because we want a
     // positive value when we pull to the left (remember, CCW is positive in

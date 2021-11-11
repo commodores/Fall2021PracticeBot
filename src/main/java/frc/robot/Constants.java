@@ -42,12 +42,12 @@ public final class Constants {
         public static final double kDriveGearRatio = 5.25;
 
         //Power Management for Drivetrain
-        public static StatorCurrentLimitConfiguration kTalonCurrentConfig = new StatorCurrentLimitConfiguration(true, 60, 40, 1.0);
+        public static StatorCurrentLimitConfiguration kTalonCurrentConfig = new StatorCurrentLimitConfiguration(true, 60, 35, 1.0);
 
         public static int kVoltageCompensation = 12;
 
-        public static int kRevContinuosCurrentLimit = 15;
-        public static int kRevPeakCurrentLimit = 30;
+        public static int kRevContinuosCurrentLimit = 30;
+        public static int kRevPeakCurrentLimit = 40;
         
         //CAN IDS for Motors and Encoders
         public static final int kFrontLeftDriveChannel = 10;
@@ -66,11 +66,6 @@ public final class Constants {
         public static final int kBackRightTurnChannel = 20;
         public static final int kBackRightEncoderChannel = 21;
 
-        //Robot Charachterization Information
-        public static final double ksVolts = 1;
-        public static final double kvVoltSecondsPerMeter = 0.8;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.15;
-
         public static final double kMaxSpeedMetersPerSecond = 3;
 
         //Cancoder offsets (angle to magnetic north)
@@ -83,15 +78,15 @@ public final class Constants {
     }
 
     public static final class ModuleConstants {
-        public static final double kMaxModuleAngularSpeedRadiansPerSecond = 4 * Math.PI;
+        public static final double kMaxModuleAngularSpeedRadiansPerSecond = 5 * Math.PI;
         public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared = 4 * Math.PI;
     
-        public static final double kPModuleTurningController = 3.6;//3.5
+        public static final double kPModuleTurningController = 2.7;//3.5
     
-        public static final double kPModuleDriveController = 1;
+        public static final double kPModuleDriveController = 1.82;
 
-        public static final SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(1,3);
-        public static final SimpleMotorFeedforward m_turnFeedforward = new SimpleMotorFeedforward(1,.5);
+        public static final SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(0.578,2.36);
+        public static final SimpleMotorFeedforward m_turnFeedforward = new SimpleMotorFeedforward(.952,.753);
       }
 
     public static final class AutoConstants {
@@ -110,7 +105,15 @@ public final class Constants {
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
       }
 
+//Drive Characterization
+//kS - 0.578
+//kV - 2.36
+//kA - .123
+//kP - 1.82
 
-
-
+//Turn Characterization
+//kS - 0.952
+//kV - 0.753
+//kA - 0.0371
+//kP - 1.24
 }
