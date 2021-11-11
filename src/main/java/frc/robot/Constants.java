@@ -47,7 +47,7 @@ public final class Constants {
         public static int kVoltageCompensation = 12;
 
         public static int kRevContinuosCurrentLimit = 30;
-        public static int kRevPeakCurrentLimit = 40;
+        public static int kRevPeakCurrentLimit = 50;
         
         //CAN IDS for Motors and Encoders
         public static final int kFrontLeftDriveChannel = 10;
@@ -66,7 +66,7 @@ public final class Constants {
         public static final int kBackRightTurnChannel = 20;
         public static final int kBackRightEncoderChannel = 21;
 
-        public static final double kMaxSpeedMetersPerSecond = 3;
+        public static final double kMaxSpeedMetersPerSecond = 4.84;
 
         //Cancoder offsets (angle to magnetic north)
         //these were moved to the cancoder configuration
@@ -78,10 +78,10 @@ public final class Constants {
     }
 
     public static final class ModuleConstants {
-        public static final double kMaxModuleAngularSpeedRadiansPerSecond = 5 * Math.PI;
-        public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared = 4 * Math.PI;
+        public static final double kMaxModuleAngularSpeedRadiansPerSecond = 6 * (2 * Math.PI);
+        public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared = 6 * (2 * Math.PI);
     
-        public static final double kPModuleTurningController = 2.7;//3.5
+        public static final double kPModuleTurningController = 1.24;//3.5
     
         public static final double kPModuleDriveController = 1.82;
 
