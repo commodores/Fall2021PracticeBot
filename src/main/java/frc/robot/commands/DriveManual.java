@@ -82,10 +82,9 @@ public class DriveManual extends CommandBase {
   }
 
   private double deadband(double testVal){
-    if(testVal > -.1 && testVal < .1){
+    if(Math.abs(testVal) < .05){
       return 0.0;
-    } else {
-      return testVal;
-    }
+    } 
+    return testVal;    
   }
 }

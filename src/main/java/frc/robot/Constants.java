@@ -42,12 +42,12 @@ public final class Constants {
         public static final double kDriveGearRatio = 5.25;
 
         //Power Management for Drivetrain
-        public static StatorCurrentLimitConfiguration kTalonCurrentConfig = new StatorCurrentLimitConfiguration(true, 60, 35, 1.0);
+        public static StatorCurrentLimitConfiguration kTalonCurrentConfig = new StatorCurrentLimitConfiguration(true, 80, 60, 1.0);
 
         public static int kVoltageCompensation = 12;
 
-        public static int kRevContinuosCurrentLimit = 30;
-        public static int kRevPeakCurrentLimit = 50;
+        public static int kRevContinuosCurrentLimit = 15;
+        public static int kRevPeakCurrentLimit = 30;
         
         //CAN IDS for Motors and Encoders
         public static final int kFrontLeftDriveChannel = 10;
