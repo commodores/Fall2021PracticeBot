@@ -72,9 +72,9 @@ public final class Constants {
         //these were moved to the cancoder configuration
         //these numbers are just for reference
         public static final Rotation2d kFrontLeftOffset = Rotation2d.fromDegrees(-8.88); //8.4
-        public static final Rotation2d kFrontRightOffset = Rotation2d.fromDegrees(-126.470); //132
+        public static final Rotation2d kFrontRightOffset = Rotation2d.fromDegrees(-126.470); //132 try 306.47 or 53.53
         public static final Rotation2d kBackLeftOffset = Rotation2d.fromDegrees(0); //0
-        public static final Rotation2d kBackRightOffset = Rotation2d.fromDegrees(-42.80); //45
+        public static final Rotation2d kBackRightOffset = Rotation2d.fromDegrees(-42.80); //45 try 222.8 or 137.2
     }
 
     public static final class ModuleConstants {
