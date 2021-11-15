@@ -28,8 +28,8 @@ public class DriveManual extends CommandBase {
     fieldRelative = getFieldRelative;
 
     m_xspeedLimiter = new SlewRateLimiter(5); 
-    m_yspeedLimiter = new SlewRateLimiter(5);
-    m_rotLimiter = new SlewRateLimiter(5);
+    m_yspeedLimiter = new SlewRateLimiter(1);
+    m_rotLimiter = new SlewRateLimiter(1);
   }
 
   // Called when the command is initially scheduled.
@@ -68,7 +68,7 @@ public class DriveManual extends CommandBase {
         -m_rotLimiter.calculate(deadR)
             * ModuleConstants.kMaxModuleAngularSpeedRadiansPerSecond;
 
-    m_swerve.drive(xSpeed, ySpeed, rot, fieldRelative);
+    m_swerve.drive(xSpeed, ySpeed, rot*.4, fieldRelative);
   }
 
   // Called once the command ends or is interrupted.
@@ -82,7 +82,7 @@ public class DriveManual extends CommandBase {
   }
 
   private double deadband(double testVal){
-    if(Math.abs(testVal) < .05){
+    if(Math.abs(testVal) < .1){
       return 0.0;
     } 
     return testVal;    
