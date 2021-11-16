@@ -27,7 +27,7 @@ public class DriveManual extends CommandBase {
 
     fieldRelative = getFieldRelative;
 
-    m_xspeedLimiter = new SlewRateLimiter(3); 
+    m_xspeedLimiter = new SlewRateLimiter(1); 
     m_yspeedLimiter = new SlewRateLimiter(1);
     m_rotLimiter = new SlewRateLimiter(1);
   }
@@ -82,7 +82,7 @@ public class DriveManual extends CommandBase {
   }
 
   private double deadband(double testVal){
-    if(Math.abs(testVal) < .1){
+    if(Math.abs(testVal) < .05){
       return 0.0;
     } 
     return testVal;    
